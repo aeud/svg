@@ -3,6 +3,11 @@
 <head>
 	<title>SVG</title>
 	<meta charset="utf-8">
+	<style type="text/css">
+	.orange {
+		background-color: orange;
+	}
+	</style>
 </head>
 <body>
 	<script src="http://d3js.org/d3.v3.min.js"></script>
@@ -15,7 +20,6 @@
 	  	for (var i = 0; i < 10; i++) {
 	  		dataset.push(Math.floor(Math.random() * 1000));
 	  	};
-	  	dataset = [123, 143, 432, 543, 566]
 	  	var w = 1000;
 		var xScale = d3.scale
 			.linear()
@@ -36,23 +40,33 @@
 	  		.append("svg")
 	  		.attr("width", "1000")
 	  		.attr("height", "1000");
-	  	svg.append("g")
+	  	var rect = svg.append("g")
 	  		.attr("transform", "translate(0, 50)")
 			.selectAll("rect")
 			.data(dataset)
 			.enter()
 			.append("rect")
 			.attr("width", 0)
-			.transition()
-			.duration(1000)
-			.ease('linear')
 			.attr("x", 0)
 			.attr("y", function(d, i) { return i * 22; })
 			.attr("height", "20")
-			.attr("width", function(d) { return xScale(d); })
 			.attr("fill", function(d) {
 				return "rgb(" + Math.floor(cScale(d)) + ", 0, 0)";
-			});
+			})
+			.on("mouseover", function() {
+				d3.select(this).attr("fill", "orange");
+			})
+			.on("mouseout", function(d) {
+				d3.select(this).attr("fill", "rgb(" + Math.floor(cScale(d)) + ", 0, 0)");
+			})
+			.on("click", function(d){
+				console.log(d);
+			})
+			.transition()
+			.duration(1000)
+			.ease('linear')
+			.attr("width", function(d) { return xScale(d); });
+
 		svg.append("g")
 	  		.attr("transform", "translate(0, 50)")
 	  		.selectAll("text")
